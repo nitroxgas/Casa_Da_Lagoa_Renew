@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Casa Da Lagoa</string>
+    <string name="title_section1">Exterior</string>
+    <string name="title_section2">Interior</string>
+    <string name="title_section3">Dispositivos</string>
+    <string name="title_section4">Temperaturas</string>
+    <string name="action_settings">Configuração</string>
+    <string name="dummy_button">Sair</string>
+    <string name="dummy_content">Conteúdo</string>
+    <string name="app_menu">Configurar</string>
+    <string name="menu_sair">Sair</string>
+    <string name="menu_external">Exterior</string>
+    <string name="menu_internal">Interior</string>
+    <string name="menu_devices">Dispositivos</string>
+    <string name="tab_stream">Interno</string>
+    <string name="tab_messages">Externo</string>
+    <string name="tab_photos">Dispositivos</string>
+    <string name="tab_notifications">Notificação</string>
+    <string name="menu_atualizar">Atualizar</string>
+
+
+</resources>
