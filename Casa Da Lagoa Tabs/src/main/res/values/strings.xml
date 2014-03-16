@@ -19,6 +19,13 @@
     <string name="tab_photos">Dispositivos</string>
     <string name="tab_notifications">Notificação</string>
     <string name="menu_atualizar">Atualizar</string>
+    <string name="opcao">Opção de menu</string>
+    <string name="acionar_portao">Acionar\nPortão</string>
+    <string name="portao">Portão</string>
+    <string name="Button">New ToggleButton</string>
+    <string name="acionar_alimentador">Alimentar\nCães</string>
+    <string name="reiniciar_internet">Reiniciar\nInternet</string>
+    <string name="reservado">Reservado</string>
 
 
 </resources>

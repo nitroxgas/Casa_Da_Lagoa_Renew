@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arr_exterior">
+        <item>Fundos</item>
+        <item>Lateral</item>
+        <item>Reservado</item>
+        <item>Reservado</item>
+        <item>Reservado</item>
+    </string-array>
+
+    <string-array name="arr_interior">
+        <item>Quarto Sup</item>
+        <item>Escada</item>
+        <item>Reservado</item>
+        <item>Reservado</item>
+        <item>Reservado</item>
+    </string-array>
+
+    <string-array name="arr_reservado">
+        <item>teste</item>
+        <item>Fundos</item>
+        <item>Lateral</item>
+    </string-array>
+
+</resources>

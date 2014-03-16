@@ -2,60 +2,236 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="br.com.casadalagoa.casadalagoa.casadalagoatabs.Principal$PlaceholderFragment"
     android:background="@color/black_overlay">
 
     <LinearLayout
-        android:orientation="vertical"
+            android:id="@+id/lay_chaves"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:dividerPadding="10sp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:showDividers="middle|end"
+            android:divider="@color/black_overlay"
+            android:baselineAligned="false"
+            android:measureWithLargestChild="false"
+            android:gravity="top"
+            android:orientation="vertical"
+        android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/section_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:background="@color/black_overlay"
+                android:textColor="#ffffff"
+                android:typeface="monospace"
+                android:textSize="24sp"
+                android:layout_weight="0.02">
+            </TextView>
+
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_section1"
+                android:id="@+id/switch1"
+                android:background="@color/black_overlay"
+                android:textStyle="bold|italic"
+                android:textSize="24sp"
+                android:textOn="Ligado"
+                android:textOff="Desligado"
+                android:textColor="#FFFFFF"
+                android:layout_weight="0.06" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/lay_botao"
+            android:visibility="invisible">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/black_overlay"
+                android:divider="@color/black_overlay"
+                android:dividerPadding="5sp"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_botao1"
+                android:layout_weight="1">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="@string/acionar_portao"
+                    android:id="@+id/button"
+                    android:layout_weight="0.03"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColorHint="#ff0000" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="@string/acionar_alimentador"
+                    android:id="@+id/button2"
+                    android:layout_weight="0.03"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColorHint="#ff0000" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="@string/reiniciar_internet"
+                    android:id="@+id/button3"
+                    android:layout_weight="0.03"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColorHint="#ff0000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/black_overlay"
+                android:divider="@color/black_overlay"
+                android:dividerPadding="5sp"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_botao2"
+                android:layout_weight="1"
+                android:focusable="false">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="@string/reservado"
+                    android:id="@+id/button4"
+                    android:layout_weight="0.03"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="false" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="@string/reservado"
+                    android:id="@+id/button5"
+                    android:layout_weight="0.03"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="false" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="@string/reservado"
+                    android:id="@+id/button6"
+                    android:layout_weight="0.03"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lay_temp"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:dividerPadding="10sp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:showDividers="middle|end"
+        android:baselineAligned="false"
+        android:measureWithLargestChild="false"
+        android:gravity="top"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/black_overlay"
+            android:divider="@color/black_overlay"
+            android:dividerPadding="10sp"
+            android:focusableInTouchMode="false"
+            android:id="@+id/linearLayout"
+            android:layout_weight="1"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/tmpPlaca"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                android:textIsSelectable="false"
+                android:text="@string/app_name"
+                android:textAlignment="gravity"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tmpInt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                android:textIsSelectable="false"
+                android:text="@string/app_name"
+                android:textAlignment="gravity"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tmpExt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                android:textIsSelectable="false"
+                android:text="@string/app_name"
+                android:textAlignment="gravity"
+                android:gravity="center" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/section_label"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/stat_notify_sync"
-            android:gravity="center_vertical"
-            android:textStyle="bold"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/reservado"
+            android:id="@+id/txtTMP"
+            android:layout_weight="1"
             android:background="@color/black_overlay"
             android:textColor="#ffffff"
-            android:typeface="monospace"
-            android:text="Opção de menu"
-            android:textSize="20sp">
-        </TextView>
-
-        <TextView
-                android:id="@+id/textView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@android:drawable/stat_notify_sync"
-                android:drawablePadding="25dp"
-                android:gravity="center_vertical"
-                android:textSize="24sp"
-                android:textStyle="bold"
-            android:background="@color/black_overlay" />
+            android:textAlignment="center"
+            android:gravity="center" />
     </LinearLayout>
 
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-        </TableRow>
-
-
-    </TableLayout>
 
 </RelativeLayout>
