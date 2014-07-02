@@ -4,9 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.text.Format;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Application;
@@ -14,10 +23,16 @@ import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.net.http.SslError;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.preference.SwitchPreference;
+import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -27,6 +42,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.Layout;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,9 +50,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.HttpAuthHandler;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.Switch;
@@ -47,7 +69,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 
 public class Principal extends ActionBarActivity implements ActionBar.TabListener {
 
@@ -66,6 +87,21 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
      */
     ViewPager mViewPager;
 
+    Timer timer;
+    MyTimerTask myTimerTask;
+    boolean showConfig = false;
+
+    // Definições para agendamentos
+    boolean verAgenda = false;
+    private Cursor mCursor = null;
+    private static final String[] COLS = new String[]
+            {CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.CALENDAR_DISPLAY_NAME};
+
+
+
+    //final String[] estado = {"0","0","0","0","0","0","0","0","0","0","0"};
+    public String servidor = "https://docs.google.com/spreadsheet/pub?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&single=true&gid=0&range=A1&output=csv";
+
     public  HttpAsyncTask mHttpAsyncTask = new HttpAsyncTask();
 
     @Override
@@ -73,18 +109,167 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         super.onResume();
         // Verifica se há conexão e faz solicitação inicial
         if(isConnected()){
+            ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService( Context.CONNECTIVITY_SERVICE );
+            NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+            NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE );
 
+            if ( activeNetInfo != null )
+            {
+                if (activeNetInfo.getTypeName().toString().contains("WIFI")) {
+                    Toast.makeText(getBaseContext(), "WIFI SSID (" + getCurrentSsid(this) + ")", Toast.LENGTH_LONG).show();
+                    if (getCurrentSsid(this).contains("GeorgeHome")) {
+                        servidor = "http://192.168.1.220:80/";
+                        Toast.makeText(getBaseContext(), "Acessando rede local...", Toast.LENGTH_LONG).show();
+                    }
+                }  else {
+                    Toast.makeText( this, "Rede Móvel - Buscando IP " , Toast.LENGTH_SHORT ).show();
+                    new HttpAsyncTask().execute("https://docs.google.com/spreadsheet/pub?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&single=true&gid=0&range=A1&output=csv");
+                }
+            }
         }
         else{
             Toast.makeText(getBaseContext(), "Não Conectado!", Toast.LENGTH_LONG).show();
         }
+    }
 
+
+    public boolean isEventInCal(Context context, String cal_meeting_id) {
+
+        Cursor cursor = context.getContentResolver().query(
+                Uri.parse("content://com.android.calendar/events"),
+                new String[] { "_id" }, " _id = ? ",
+                new String[] { cal_meeting_id }, null);
+
+        if (cursor.moveToFirst()) {
+            //will give all events
+            return true;
+        }
+        return false;
+    }
+
+    public void clickMenos(View view){
+        new HttpAsyncTask().execute(servidor+"?relay=TVSALA&op=VMenos");
+    }
+
+    public void ajustaBotoes( String[] estado) {
+
+        Button portao = (Button) findViewById(100);
+        implementaBotao(portao, "?relay=50.", "Abrir o portão ?",R.drawable.ic_remote, estado, true);
+
+        Button alimentador = (Button) findViewById(101);
+        implementaBotao(alimentador, "?relay=RACAO",  "Acionar o alimentador ?",R.drawable.ic_dog_g, estado, true);
+
+        Button internet = (Button) findViewById(102);
+        implementaBotao(internet, "?relay=INTERNET", "Reiniciar a internet ?",R.drawable.abc_ic_go_search_api_holo_light, estado, true);
+
+        Button tv = (Button) findViewById(R.id.bt_tvsala);
+        implementaBotao(tv, "TV_SALA", "Ligar/Desligar TV ?",R.drawable.ic_remote, estado, false);
+
+        Button lareira = (Button) findViewById(R.id.bt_lareira);
+        implementaBotao(lareira, "LR_SALA", "Ligar/Desligar Lareira ?",R.drawable.ic_remote, estado, false);
+
+        Button lig_todas = (Button) findViewById(R.id.bt_ligatudo);
+        implementaBotao(lig_todas, "acende externa", "Ligar Luzes Externas ?",R.drawable.ic_remote, estado, true);
+
+        Button lig_internas = (Button) findViewById(R.id.bt_liga_internas);
+        implementaBotao(lig_internas, "acende interna", "Ligar Luzes Internas ?",R.drawable.ic_remote, estado, true);
+
+        Button tv_liga = (Button) findViewById(R.id.tv_liga);
+        implementaBotao(tv_liga, "?relay=TVSALA&op=PWR", "--",R.drawable.ic_remote, estado, false);
+
+        Button tv_v_mais = (Button) findViewById(R.id.tv_vol_mais);
+        implementaBotao(tv_v_mais, "?relay=TVSALA&op=VMais", "--",R.drawable.ic_remote, estado, false);
+                    /*
+                    Button tv_v_menos = (Button) findViewById(R.id.tv_vol_menos);
+                    implementaBotao(tv_v_menos, "?relay=TVSALA&op=VMenos", "--",R.drawable.ic_remote, estado, false);
+*/
+        Button tv_prox = (Button) findViewById(R.id.tv_left);
+        implementaBotao(tv_prox, "?relay=TVSALA&op=Prox", "--",R.drawable.ic_remote, estado, false);
+
+        Button tv_source = (Button) findViewById(R.id.tv_input);
+        implementaBotao(tv_source, "?relay=TVSALA&op=Input", "--",R.drawable.ic_remote, estado, false);
+
+        Button tv_ok = (Button) findViewById(R.id.tv_ok);
+        implementaBotao(tv_ok, "?relay=TVSALA&op=OK", "--",R.drawable.ic_remote, estado, false);
+
+        Button tv_ca_mais = (Button) findViewById(R.id.tv_ca_mais);
+        implementaBotao(tv_ca_mais, "?relay=TVSALA&op=CMais", "--",R.drawable.ic_remote, estado, false);
+
+        Button tv_ca_menos = (Button) findViewById(R.id.tv_ca_menos);
+        implementaBotao(tv_ca_menos, "?relay=TVSALA&op=CMenos", "--",R.drawable.ic_remote, estado, false);
+
+        Button tv_ant = (Button) findViewById(R.id.tv_ant);
+        implementaBotao(tv_ant, "?relay=TVSALA&op=Ant", "--",R.drawable.ic_remote, estado, false);
+
+        // Botoes da lareira
+
+        Button lr_liga = (Button) findViewById(R.id.bt_lr_liga);
+        implementaBotao(lr_liga, "?relay=LRSALA&op=PWR", "--",R.drawable.ic_remote, estado, false);
+
+        Button lr_chama = (Button) findViewById(R.id.bt_lr_ch);
+        implementaBotao(lr_chama, "?relay=LRSALA&op=CHM", "--",R.drawable.ic_remote, estado, false);
+
+        Button lr_med = (Button) findViewById(R.id.bt_lr_med);
+        implementaBotao(lr_med, "?relay=LRSALA&op=MED", "--",R.drawable.ic_remote, estado, false);
+
+        Button lr_high = (Button) findViewById(R.id.bt_lr_alta);
+        implementaBotao(lr_high, "?relay=LRSALA&op=HIGH", "--",R.drawable.ic_remote, estado, false);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (timer!=null) timer.cancel();
+    }
+
+    public String getLocalIpAddress()
+    {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e("Net", ex.toString());
+        }
+
+        return null;
+    }
+
+    public String getCurrentSsid(Context context) {
+
+        String ssid = null;
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo.isConnected()) {
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+            if (connectionInfo != null && !(connectionInfo.getSSID().equals(""))) {
+                //if (connectionInfo != null && !StringUtil.isBlank(connectionInfo.getSSID())) {
+                ssid = connectionInfo.getSSID();
+            }
+        }
+        return ssid;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_principal);
+
+
+
+        // Tratamento de calendário
+
+        if (isEventInCal(this,"Lareira") == true) {
+            Toast.makeText( this, "Tem Evento" , Toast.LENGTH_SHORT ).show();
+        }
+
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -123,12 +308,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                             .setTabListener(this));
         }
 
-
-
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,8 +324,22 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         // as you specify a parent activity in AndroidManifest.xml.
         ActionBar actionBar = getSupportActionBar();
         switch(item.getItemId()) {
-            case R.id.menu_toggle_log: break;
-            case R.id.menu_atualizar: new HttpAsyncTask().execute("http://georgesilva.dyndns.org:8080/"); break;
+            case R.id.menu_toggle_log: showConfig=!showConfig; break;
+            case R.id.menu_agenda:
+                verAgenda=!verAgenda;
+                break;
+            case R.id.menu_atualizar:
+                new HttpAsyncTask().execute(servidor);
+                if (timer==null) {
+                    timer = new Timer();
+                    myTimerTask = new MyTimerTask();
+                    timer.schedule(myTimerTask, 10000, 30 * 1000);
+                    if (showConfig) Toast.makeText(getBaseContext(), "(Iniciou Timer)", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (showConfig) Toast.makeText(getBaseContext(), "(Parou Timer)", Toast.LENGTH_SHORT).show();
+                    timer.cancel();
+                }
+                break;
             case R.id.menu_devices: actionBar.setSelectedNavigationItem(0);  break;
             //case R.id.menu_internal: actionBar.setSelectedNavigationItem(2);  break;
             case R.id.menu_external: actionBar.setSelectedNavigationItem(1);  break;
@@ -159,7 +353,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
-        new HttpAsyncTask().execute("http://georgesilva.dyndns.org:8080/");
+        if (!servidor.contains("https://docs"))  new HttpAsyncTask().execute(servidor);
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
@@ -170,6 +364,23 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
+
+
+    class MyTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    HttpAsyncTask mHttpAsyncTask = (HttpAsyncTask) new HttpAsyncTask().execute(servidor);
+                    if (showConfig) Toast.makeText(getBaseContext(), "(Atualizando)", Toast.LENGTH_SHORT).show();
+                }});
+
+        }
+
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -202,8 +413,6 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                     return getString(R.string.title_section4).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section1).toUpperCase(l);
-                case 3:
-                    return getString(R.string.title_section2).toUpperCase(l);
                 case 0:
                     return getString(R.string.title_section3).toUpperCase(l);
             }
@@ -244,7 +453,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                 chave_nova.setText(conteudo[i]);
                 chave_nova.setLayoutParams(rootView.findViewById(R.id.switch1).getLayoutParams());
                 chave_nova.setId(i + (100 * sec));
-                chave_nova.setTextOff("Delisgado");
+                chave_nova.setTextOff("Desligado");
                 chave_nova.setTextOn("Ligado");
                 chave_nova.setBackgroundColor(getResources().getColor(R.color.black_overlay));
                 chave_nova.setTextAppearance(chave_nova.getContext(),R.style.ChaveTextAppearance);
@@ -258,7 +467,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         }
 
         // Declara chaves já disponíveis
-        public final String[] arr_Interior = { "Escritório", "Escada", "Reservado", "Reservado"  };
+        public final String[] arr_Interior = { "Quarto", "Closet", "Cabeceira G", "Cabeceira C", "Escritório", "Escada"  };
         public final String[] arr_Exterior = { "Fundos", "Área de Serviço" };
 
 
@@ -284,8 +493,44 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                     tempPlaca.setId(401);
                     TextView tempExt = (TextView) tempView.findViewById(R.id.tmpExt);
                     tempExt.setId(402);
-                    TextView tempInt = (TextView) tempView.findViewById(R.id.tmpInt);
+                    final TextView tempInt = (TextView) tempView.findViewById(R.id.tmpInt);
                     tempInt.setId(403);
+
+                    WebView tela = (WebView) tempView.findViewById(R.id.webView);
+                    tela.getSettings().setJavaScriptEnabled(false);
+                    tela.setEnabled(true);
+                    //tela.setInitialScale(250);
+                   // tela.getSettings().setBuiltInZoomControls(true);
+                    tela.setWebChromeClient(new WebChromeClient() {
+                        public void onProgressChanged(WebView view, int progress) {
+                            // Activities and WebViews measure progress with different scales.
+                            // The progress meter will automatically disappear when we reach 100%
+                            //activity.setProgress(progress * 1000);
+                            tempInt.setText(progress);
+
+                        }
+                    });
+
+                    tela.setWebChromeClient(new WebChromeClient() {
+
+                        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                            tempInt.setText("Oh no! " + description);
+                        }
+
+                        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError
+                                error) {
+                            // Ignora erros de SSL, nosso certificado é autoassinado
+                            handler.proceed();
+                        }
+                    });
+
+
+                    tela.clearSslPreferences();
+                    tela.loadUrl("https://docs.google.com/spreadsheet/oimg?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&oid=1&zx=uz4jqb2kuxjw");
+                    //String fonteGrafico = "<img src=\"https://docs.google.com/spreadsheet/oimg?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&oid=1&zx=uz4jqb2kuxjw\" />";
+                    //tela.loadDataWithBaseURL("https://docs.google.com/spreadsheet/",fonteGrafico,"text/html",null,null);
+
+
                     break; //  textView.setTag(getArguments().getInt(ARG_SECTION_NUMBER), tempObj);
                 case 2: // Exterior
                     botaoView.setVisibility(View.GONE);
@@ -304,12 +549,11 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                     alim.setId(101);
                     Button internet = (Button) botaoView.findViewById(R.id.bt_inter);
                     internet.setId(102);
-
                     //botaoView.findViewById(R.id.button).setOnClickListener();
-
             }
 
             rootView.findViewById(R.id.switch1).setVisibility(View.GONE);
+
             return rootView;
         }
     }
@@ -340,7 +584,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
 
         } catch (Exception e) {
             result = "Exception no recebimento..." + e.toString();
-
+           // this.servidor = "http://186.222.50.176:8080";
         }
 
         return result;
@@ -354,13 +598,13 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
             result += line;
         inputStream.close();
         return result;
-
     }
 
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected())
+
             return true;
         else
             return false;
@@ -374,9 +618,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
             temperatura = Long.parseLong(retorno);
             */
 
-            temperatura = Integer.parseInt(retorno.substring(0,retorno.indexOf(".")));
-
-
+            temperatura = Integer.parseInt(retorno); //.substring(0,retorno.indexOf(".")
 
             if (temperatura < 20)
                 textView.setTextColor(textView.getResources().getColor(R.color.c_azul));
@@ -388,7 +630,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                 textView.setTextColor(textView.getResources().getColor(R.color.c_vermelho));
             }
         } catch (NumberFormatException nfe) {
-            System.out.println("Could not parse " + nfe);
+            System.out.println("Não foi possível decodificar " + nfe);
         }
 
     }
@@ -397,56 +639,94 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         sw.setOnClickListener(
                 new Switch.OnClickListener() {
                     public void onClick(View view) {
-                       new HttpAsyncTask().execute("http://georgesilva.dyndns.org:8080/"+rele);
+                       new HttpAsyncTask().execute(servidor+rele);
                     }
                 });
 
     }
 
-
-
-
-    public void implementaBotao(final Button bt, final String rele, final String mensagem, final int icone, final String[] estado){
+    public void implementaBotao(final Button bt, final String rele, final String mensagem, final int icone, final String[] estado, final boolean confirmar){
 
         bt.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View view) {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
-                        // set title
-                        alertDialogBuilder.setTitle("Confirmação");
-                        alertDialogBuilder.setIcon(icone);
-                        // set dialog message
-                        alertDialogBuilder
-                                .setMessage(mensagem)
-                                .setCancelable(true)
-                                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        if (rele.equals("acende externa")) {
+                        if (confirmar) {
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+                            // set title
+                            alertDialogBuilder.setTitle("Confirmação");
+                            alertDialogBuilder.setIcon(icone);
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage(mensagem)
+                                    .setCancelable(true)
+                                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if (rele.equals("acende externa")) {
+                                                if (estado[4].equals("0"))
+                                                    new HttpAsyncTask().execute(servidor+"?relay=1.");
+                                                if (estado[5].equals("1"))
+                                                    new HttpAsyncTask().execute(servidor+"?relay=2.");
+                                            } else if (rele.equals("acende interna")) {
+                                                for (int i = 6; i <= 7; i++) {
+                                                    if (estado[i].equals("0"))
+                                                        new HttpAsyncTask().execute(servidor+"?relay=" + (i - 3) + ".");
+                                                }
+                                                for (int i = 9; i <= 12; i++) {
+                                                    if (estado[i].equals("0"))
+                                                        new HttpAsyncTask().execute(servidor+"?relay=" + i  + ".");
+                                                }
+                                            } else
+                                                new HttpAsyncTask().execute(servidor + rele);
 
-                                            if (estado[4].equals("0"))
-                                                new HttpAsyncTask().execute("http://georgesilva.dyndns.org:8080/?relay=1.");
-
-                                            if (estado[5].equals("1"))
-                                                new HttpAsyncTask().execute("http://georgesilva.dyndns.org:8080/?relay=2.");
-
-                                        } else if (rele.equals("acende interna")) {
-                                            for (int i=6; i<=7; i++) {
-                                                if (estado[i].equals("0"))
-                                                    new HttpAsyncTask().execute("http://georgesilva.dyndns.org:8080/?relay=" + (i-3) + ".");
-                                            }
-                                        } else
-                                            new HttpAsyncTask().execute("http://georgesilva.dyndns.org:8080/" + rele); //http://georgesilva.dyndns.org:8080/" + rele);
-                                    }
-                                })
-                                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        // create alert dialog
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        // show it
-                        alertDialog.show();
+                                        }
+                                    })
+                                    .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            // show it
+                            alertDialog.show();
+                        } else {
+                            // Sem confirmação
+                            if (rele.equals("TV_SALA")) {
+                                Button tv_sala = (Button) findViewById(R.id.bt_tvsala);
+                                Button bt_lareira = (Button) findViewById(R.id.bt_lareira);
+                                bt_lareira.setVisibility(Button.GONE);
+                              //  LinearLayout botao2 = (LinearLayout) findViewById(R.id.lay_botao2);
+                                if (findViewById(R.id.lay_tv).getVisibility() == View.GONE) {
+                                    findViewById(R.id.lay_tv).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.lay_botao1).setVisibility(View.GONE);
+                                //    botao2.setMinimumHeight(2);
+                                    tv_sala.setText("Voltar");
+                                } else {
+                                    findViewById(R.id.lay_tv).setVisibility(View.GONE);
+                                    findViewById(R.id.lay_botao1).setVisibility(View.VISIBLE);
+                                //    botao2.setMinimumHeight(1);
+                                    tv_sala.setText("TV\nSala");
+                                    bt_lareira.setVisibility(Button.VISIBLE);
+                                }
+                            } else if (rele.equals("LR_SALA")) {
+                                Button tv_sala = (Button) findViewById(R.id.bt_tvsala);
+                                Button bt_lareira = (Button) findViewById(R.id.bt_lareira);
+                                tv_sala.setVisibility(Button.GONE);
+                                //  LinearLayout botao2 = (LinearLayout) findViewById(R.id.lay_botao2);
+                                if (findViewById(R.id.lay_lareira).getVisibility() == View.GONE) {
+                                    findViewById(R.id.lay_lareira).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.lay_botao1).setVisibility(View.GONE);
+                                    //    botao2.setMinimumHeight(2);
+                                    bt_lareira.setText("Voltar");
+                                } else {
+                                    findViewById(R.id.lay_lareira).setVisibility(View.GONE);
+                                    findViewById(R.id.lay_botao1).setVisibility(View.VISIBLE);
+                                    //    botao2.setMinimumHeight(1);
+                                    bt_lareira.setText("Lareira\nSala");
+                                    tv_sala.setVisibility(Button.VISIBLE);
+                                }
+                            } else new HttpAsyncTask().execute(servidor + rele);
+                        }
                     }
                 });
 
@@ -458,6 +738,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
 
             return GET(urls[0]);
         }
+        public String[] estado = {"0","0","0","0","0","0","0","0","0","0","0","0","0"};
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
@@ -466,58 +747,148 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
              *  Verifica se o retorno não é nulo e se tem o tamanho esperado.
              */
 
-            if (result.contains("</DADOS>")){
+           // Toast.makeText(getBaseContext(), "(" + result.toString() + ") Conexão", Toast.LENGTH_LONG).show();
+            if (result.matches("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")){
+
+                servidor = "http://"+result.toString()+":8080/";
+                new HttpAsyncTask().execute(servidor);
+                Toast.makeText(getBaseContext(), "IP Identificado:(" + servidor.toString() + ")", Toast.LENGTH_SHORT).show();
+            } else
+            if (result.contains("</DADOS>")) {
                // result = result +":19:25";
 
                 result = result.substring(result.indexOf("<DADOS>")+7, result.indexOf("</DADOS>"));
 
-                //Toast.makeText(getBaseContext(), "(" + result.toString() + ")", Toast.LENGTH_LONG).show();
+                if (showConfig) Toast.makeText(getBaseContext(), "(" + result.toString() + ")", Toast.LENGTH_SHORT).show();
 
-                final String[] estado = result.split(":");
+                // Verifica calendário da casa e executa o que estiver agendado.
+                if (verAgenda) {
+                    Toast.makeText(getBaseContext(), "( Consultando agendamentos... )", Toast.LENGTH_SHORT).show();
+
+                    String selection = "((" +  CalendarContract.Events.CALENDAR_DISPLAY_NAME + " = ?) AND (" + CalendarContract.Events.DTSTART +" = ?))";
+                    Calendar beginTime = Calendar.getInstance();
+                    beginTime.set(2014, 7, 27);
+                    long startMillis = beginTime.getTimeInMillis();
+
+                    String[] selectionArgs = new String[] {"Casa da Lagoa", beginTime.getTime().toString()};
+
+                    mCursor = getContentResolver().query(CalendarContract.Events.CONTENT_URI, COLS, selection, selectionArgs, null);
+
+                    mCursor.moveToFirst();
+                    String title = "N/A";
+                    Long start = 0L;
+                    Format df = DateFormat.getDateFormat(getBaseContext());
+                    Format tf = DateFormat.getTimeFormat(getBaseContext());
+
+                    try {
+                        /*
+                        while (!mCursor.isLast()){
+                            if (mCursor.getString(2).toString()!="Casa da Lagoa") {
+                                mCursor.moveToNext();
+                            } else break;
+                        }
+                        */
+                        title = mCursor.getString(0);
+                        start = mCursor.getLong(1);
+                        Toast.makeText(getBaseContext(), "("+mCursor.getString(2).toString()+" - "+title.toString()+" "+df.format(start)+" at "+tf.format(start)+")", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                    //ignore
+                    }
+
+                }
 
                 View botaoView = findViewById(R.id.lay_botao);
                 View chaveView = findViewById(R.id.lay_chaves);
                 View tempView = findViewById(R.id.lay_temp);
 
+                estado = result.split(":");
+                if (estado.length<21) {
+                    Toast.makeText(getBaseContext(), "(" + result.toString() + ") Muito Curto", Toast.LENGTH_SHORT).show();
+                }
+
+                /*
+                Estados
+                1  -> Temperatura Circuitos
+                2  -> Temperatura Externa
+                3  -> Temperatura Interna
+                4  -> Área de serviço
+                5  -> Fundos
+                6  -> Relê
+                7  -> Relê
+                8  -> Relê
+                9  ->
+                10 ->
+
+                 */
+
+                /*
+                 *  Configura onClickListener dos botões de acordo com o status retornado
+                 */
+
+                if (botaoView!=null) {
+                    ajustaBotoes(estado);
+                    View lr_img_view = findViewById(R.id.lay_lr_img);
+
+
+                    if (estado[21].contains("0")) {
+                        lr_img_view.setBackgroundResource(R.drawable.bg_lareira_off);
+                    } else {
+                        lr_img_view.setBackgroundResource(R.drawable.bg_lareira);
+                    }
+
+                    TextView lr_temp = (TextView) findViewById(R.id.lr_temp); //  mViewPager.getChildAt(0).getRootView().
+                    if (lr_temp != null) {
+                        lr_temp.setText("Sala\n" + estado[3] + "º C");
+                        ajustacor(lr_temp,  estado[3]);
+                    }
+                }
+
                 /*
                     Ajusta as chaves de acordo com o retorno
                  */
-
-                if (botaoView!=null){
-                    Button portao = (Button) findViewById(100);
-                    implementaBotao(portao, "?relay=50.", "Abrir o portão ?",R.drawable.ic_remote_g, estado);
-                    Button alimentador = (Button) findViewById(101);
-                    implementaBotao(alimentador, "?relay=RACAO",  "Acionar o alimentador ?",R.drawable.ic_dog_g, estado);
-                    Button internet = (Button) findViewById(102);
-                    implementaBotao(internet, "?relay=INTERNET", "Reiniciar a internet ?",R.drawable.abc_ic_go, estado);
-                    Button tv = (Button) findViewById(R.id.bt_tvsala);
-                    implementaBotao(tv, "?relay=TVSALA", "Ligar/Desligar TV ?",R.drawable.ic_remote, estado);
-                    Button lig_todas = (Button) findViewById(R.id.bt_ligatudo);
-                    implementaBotao(lig_todas, "acende externa", "Ligar Luzes Externas ?",R.drawable.ic_remote, estado);
-                    Button lig_internas = (Button) findViewById(R.id.bt_liga_internas);
-                    implementaBotao(lig_internas, "acende interna", "Ligar Luzes Internas ?",R.drawable.ic_remote, estado);
-                }
-
                 if (chaveView!=null) {
-                    Switch chave2 = (Switch) findViewById(201); // 201 Área
+                    Switch chave2 = (Switch) findViewById(201); // 201 Área Serviço
                     if (estado[4].contains("1")) chave2.setChecked(true);
                     else chave2.setChecked(false);
                     implementaClick(chave2,"?relay=1.");
 
-                    Switch chave1 = (Switch) findViewById(200); // 200 Fundos, 201 Área
+                    Switch chave1 = (Switch) findViewById(200); // 200 Fundos
                     if (estado[5].contains("0")) chave1.setChecked(true);
                     else chave1.setChecked(false);
                     implementaClick(chave1,"?relay=2.");
 
-                    Switch chave3 = (Switch) findViewById(300); // 300 Escritório
-                    implementaClick(chave3,"?relay=3.");
-                    if (estado[6].contains("1")) chave3.setChecked(true);
+                    Switch chave3 = (Switch) findViewById(300); // 300 Quarto
+                    implementaClick(chave3,"?relay=9.");
+                    if (estado[9].contains("1")) chave3.setChecked(true);
                     else chave3.setChecked(false);
 
-                    Switch chave4 = (Switch) findViewById(301); // 301 Escada
-                    implementaClick(chave4,"?relay=4.");
-                    if (estado[7].contains("1")) chave4.setChecked(true);
+                    Switch chave4 = (Switch) findViewById(301); // 301 Closet
+                    implementaClick(chave4,"?relay=10.");
+                    if (estado[10].contains("1")) chave4.setChecked(true);
                     else chave4.setChecked(false);
+
+                    Switch chave5 = (Switch) findViewById(302); // 302 Cab G
+                    implementaClick(chave5,"?relay=11.");
+                    if (estado[11].contains("1")) chave5.setChecked(true);
+                    else chave5.setChecked(false);
+
+                    Switch chave6 = (Switch) findViewById(303); // 303 Cab C
+                    implementaClick(chave6,"?relay=12.");
+                    if (estado[12].contains("1")) chave6.setChecked(true);
+                    else chave6.setChecked(false);
+
+                    Switch chave7 = (Switch) findViewById(304); // 300 Escritório
+                    implementaClick(chave7,"?relay=3.");
+                    if (estado[6].contains("1")) chave7.setChecked(true);
+                    else chave7.setChecked(false);
+
+                    Switch chave8 = (Switch) findViewById(305); // 301 Escada
+                    implementaClick(chave8,"?relay=4.");
+                    if (estado[7].contains("1")) chave8.setChecked(true);
+                    else chave8.setChecked(false);
                 }
 
                     /*
@@ -538,11 +909,12 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                             ajustacor(tmpExt, estado[2]);
                         }
 
-                        TextView tmpInt = (TextView) findViewById(403); //  mViewPager.getChildAt(0).getRootView().
+                        final TextView tmpInt = (TextView) findViewById(403); //  mViewPager.getChildAt(0).getRootView().
                         if (tmpInt != null) {
-                            tmpInt.setText("Dentro de\nCasa\n" + estado[3] + "º C");
+                            tmpInt.setText("Casa\n" + estado[3] + "º C");
                             ajustacor(tmpInt,  estado[3]);
                         }
+
 
                 }
 
@@ -552,7 +924,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                 }
                  */
 
-            } else Toast.makeText(getBaseContext(), "(" + result.toString() + ") Conexão", Toast.LENGTH_LONG).show();
+            } else Toast.makeText(getBaseContext(), "Resultado Não Esperado: (" + result.toString() + ")", Toast.LENGTH_LONG).show();
         }
     }
 }

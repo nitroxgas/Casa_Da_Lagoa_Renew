@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     tools:context="br.com.casadalagoa.casadalagoa.casadalagoatabs.Principal$PlaceholderFragment"
     android:background="@color/black_overlay">
 
@@ -9,17 +9,13 @@
             android:id="@+id/lay_chaves"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:dividerPadding="10sp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:showDividers="middle|end"
             android:divider="@color/black_overlay"
-            android:baselineAligned="false"
-            android:measureWithLargestChild="false"
-            android:gravity="top"
             android:orientation="vertical"
-        android:visibility="invisible">
-
+            android:visibility="gone"
+            android:showDividers="middle"
+        android:dividerPadding="2sp"
+        android:focusable="false">
+<!--
             <TextView
                 android:id="@+id/section_label"
                 android:layout_width="match_parent"
@@ -31,10 +27,10 @@
                 android:textSize="24sp"
                 android:layout_weight="0.02">
             </TextView>
-
+-->
             <Switch
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:text="@string/title_section1"
                 android:id="@+id/switch1"
                 android:background="@color/black_overlay"
@@ -43,34 +39,34 @@
                 android:textOn="Ligado"
                 android:textOff="Desligado"
                 android:textColor="#FFFFFF"
-                android:layout_weight="0.06" />
+                android:layout_weight="1" />
 
 
         </LinearLayout>
 
-        <LinearLayout
+    <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/lay_botao"
-            android:visibility="invisible">
+        android:visibility="gone">
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:background="@color/black_overlay"
                 android:divider="@color/black_overlay"
-                android:dividerPadding="5sp"
                 android:focusableInTouchMode="false"
                 android:id="@+id/lay_botao1"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="visible">
 
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:text="@string/acionar_portao"
-                    android:id="@+id/button"
+                    android:id="@+id/bt_portao"
                     android:layout_weight="0.03"
                     android:textColor="#FFFFFF"
                     android:textColorHighlight="#FF0000"
@@ -82,7 +78,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:text="@string/acionar_alimentador"
-                    android:id="@+id/button2"
+                    android:id="@+id/bt_alim"
                     android:layout_weight="0.03"
                     android:textColor="#FFFFFF"
                     android:textColorHighlight="#FF0000"
@@ -94,7 +90,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:text="@string/reiniciar_internet"
-                    android:id="@+id/button3"
+                    android:id="@+id/bt_inter"
                     android:layout_weight="0.03"
                     android:textColor="#FFFFFF"
                     android:textColorHighlight="#FF0000"
@@ -104,80 +100,405 @@
 
             </LinearLayout>
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="0sp"
+            android:layout_weight="3"
+            android:id="@+id/lay_lareira"
+            android:clickable="true"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_lareira"
+                android:divider="@color/black_overlay"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_lr_img"
+                android:layout_weight="2"
+                android:focusable="false"
+                android:visibility="visible"
+                android:isScrollContainer="false"
+                android:baselineAligned="false"
+                android:gravity="center|center_vertical|fill_horizontal|center_horizontal|fill|fill_vertical"
+                android:alpha="255">
+
+                <TextView
+                    android:id="@+id/lr_temp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/black_overlay"
+                    android:textColor="#ffffff"
+                    android:textSize="24sp"
+                    android:layout_weight="1"
+                    android:textIsSelectable="false"
+                    android:textAlignment="gravity"
+                    android:gravity="center"
+                    android:singleLine="false"
+                    android:textStyle="bold"
+                    android:text="@string/sem_conexao" />
+            </LinearLayout>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/black_overlay"
                 android:divider="@color/black_overlay"
-                android:dividerPadding="5sp"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_lar1"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:visibility="visible" >
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/bt_lr_liga"
+                    android:layout_weight="1"
+                    android:textColor="#FF0000"
+                    android:textColorHighlight="#FFffff"
+                    android:textSize="22sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:text="@string/tv_liga"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/lr_chama"
+                    android:id="@+id/bt_lr_ch"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/black_overlay"
+                android:divider="@color/black_overlay"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_lar2"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:visibility="visible" >
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/lr_alta"
+                    android:id="@+id/bt_lr_alta"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    android:longClickable="true" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/lr_media"
+                    android:id="@+id/bt_lr_med"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    android:longClickable="true"
+                    android:onClick="clickMenos" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="0sp"
+            android:layout_weight="2"
+            android:id="@+id/lay_tv"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/black_overlay"
+                android:divider="@color/black_overlay"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_tv1"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:visibility="visible">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/tv_liga"
+                    android:layout_weight="1"
+                    android:textColor="#FF0000"
+                    android:textColorHighlight="#FFffff"
+                    android:textSize="22sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:text="@string/tv_liga"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/tv_ca_mais"
+                    android:id="@+id/tv_ca_mais"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/tv_vol_mais"
+                    android:id="@+id/tv_vol_mais"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    android:longClickable="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/black_overlay"
+                android:divider="@color/black_overlay"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_tv2"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:visibility="visible">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/tv_input"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:text="@string/tv_input"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/tv_ca_menos"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    android:text="@string/tv_ca_menos" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/tv_vol_menos"
+                    android:id="@+id/tv_vol_menos"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    android:longClickable="true"
+                    android:onClick="clickMenos" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/black_overlay"
+                android:divider="@color/black_overlay"
+                android:focusableInTouchMode="false"
+                android:id="@+id/lay_tv3"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:visibility="visible"
+                android:isScrollContainer="false">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/tv_anterior"
+                    android:id="@+id/tv_ant"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#7cd7ff"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    android:longClickable="true" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/tv_ok"
+                    android:id="@+id/tv_ok"
+                    android:layout_weight="1"
+                    android:textColor="#00FF00"
+                    android:textColorHighlight="#7cd7ff"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/tv_left"
+                    android:id="@+id/tv_left"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#7cd7ff"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    android:longClickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:background="@color/black_overlay"
+                android:divider="@color/black_overlay"
                 android:focusableInTouchMode="false"
                 android:id="@+id/lay_botao2"
                 android:layout_weight="1"
-                android:focusable="false">
+                android:focusable="false"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
 
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="fill_parent"
-                    android:text="@string/reservado"
-                    android:id="@+id/button4"
-                    android:layout_weight="0.03"
+                    android:id="@+id/bt_lareira"
+                    android:layout_weight="1"
                     android:textColor="#FFFFFF"
                     android:textColorHighlight="#FF0000"
                     android:textSize="20sp"
                     android:textColorHint="#ff0000"
-                    android:enabled="false" />
+                    android:enabled="true"
+                    android:text="@string/lr_bt_txt"
+                    android:textStyle="bold" />
 
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:text="@string/reservado"
-                    android:id="@+id/button5"
-                    android:layout_weight="0.03"
-                    android:textColor="#FFFFFF"
-                    android:textColorHighlight="#FF0000"
-                    android:textSize="20sp"
-                    android:textColorHint="#ff0000"
-                    android:enabled="false" />
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/bt_tvsala"
+                        android:layout_weight="1"
+                        android:textColor="#FFFFFF"
+                        android:textColorHighlight="#FF0000"
+                        android:textSize="20sp"
+                        android:textColorHint="#ff0000"
+                        android:enabled="true"
+                        android:text="@string/tv_sala"
+                        android:textStyle="bold" />
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:text="@string/reservado"
-                    android:id="@+id/button6"
-                    android:layout_weight="0.03"
-                    android:textColor="#FFFFFF"
-                    android:textColorHighlight="#FF0000"
-                    android:textSize="20sp"
-                    android:textColorHint="#ff0000"
-                    android:enabled="false" />
             </LinearLayout>
-        </LinearLayout>
+
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/ligar_tudo"
+                    android:id="@+id/bt_ligatudo"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FF0000"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/ligar_internas"
+                    android:id="@+id/bt_liga_internas"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#7cd7ff"
+                    android:textSize="20sp"
+                    android:textColorHint="#ff0000"
+                    android:enabled="true"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lay_temp"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:dividerPadding="10sp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:showDividers="middle|end"
         android:baselineAligned="false"
         android:measureWithLargestChild="false"
-        android:gravity="top"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:divider="#66FFFFFF"
+        android:clickable="false"
+        android:showDividers="beginning|middle|end"
+        android:visibility="visible">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/black_overlay"
             android:divider="@color/black_overlay"
-            android:dividerPadding="10sp"
             android:focusableInTouchMode="false"
             android:id="@+id/linearLayout"
             android:layout_weight="1"
-            android:showDividers="middle">
+            android:longClickable="false"
+            android:focusable="false"
+            android:showDividers="beginning|middle|end">
 
             <TextView
                 android:id="@+id/tmpPlaca"
@@ -188,9 +509,9 @@
                 android:textSize="24sp"
                 android:layout_weight="1"
                 android:textIsSelectable="false"
-                android:text="@string/app_name"
-                android:textAlignment="gravity"
-                android:gravity="center" />
+                android:gravity="center"
+                android:singleLine="false"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tmpInt"
@@ -201,9 +522,11 @@
                 android:textSize="24sp"
                 android:layout_weight="1"
                 android:textIsSelectable="false"
-                android:text="@string/app_name"
                 android:textAlignment="gravity"
-                android:gravity="center" />
+                android:gravity="center"
+                android:singleLine="false"
+                android:textStyle="bold"
+                android:text="@string/sem_conexao" />
 
             <TextView
                 android:id="@+id/tmpExt"
@@ -214,23 +537,23 @@
                 android:textSize="24sp"
                 android:layout_weight="1"
                 android:textIsSelectable="false"
-                android:text="@string/app_name"
                 android:textAlignment="gravity"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
+        <WebView
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/reservado"
-            android:id="@+id/txtTMP"
-            android:layout_weight="1"
-            android:background="@color/black_overlay"
-            android:textColor="#ffffff"
-            android:textAlignment="center"
-            android:gravity="center" />
+            android:id="@+id/webView"
+            android:layout_weight="2"
+            android:background="@color/c_vermelho"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:textAlignment="gravity" />
+
     </LinearLayout>
 
 

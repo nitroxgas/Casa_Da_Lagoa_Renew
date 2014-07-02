@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Casa Da Lagoa</string>
-    <string name="title_section1">Exterior</string>
+    <string name="title_section1">Iluminação</string>
     <string name="title_section2">Interior</string>
     <string name="title_section3">Dispositivos</string>
     <string name="title_section4">Temperaturas</string>
@@ -11,7 +11,8 @@
     <string name="dummy_content">Conteúdo</string>
     <string name="app_menu">Configurar</string>
     <string name="menu_sair">Sair</string>
-    <string name="menu_external">Exterior</string>
+    <string name="menu_Calendario">Observar Agenda</string>
+    <string name="menu_external">Iluminação</string>
     <string name="menu_internal">Interior</string>
     <string name="menu_devices">Dispositivos</string>
     <string name="tab_stream">Interno</string>
@@ -26,6 +27,23 @@
     <string name="acionar_alimentador">Alimentar\nCães</string>
     <string name="reiniciar_internet">Reiniciar\nInternet</string>
     <string name="reservado">Reservado</string>
-
-
+    <string name="ligar_tudo">Ligar\nExternas</string>
+    <string name="ligar_internas">Ligar\nInternas</string>
+    <string name="tv_sala">TV\nSala</string>
+    <string name="tv_liga">Liga\nDesliga</string>
+    <string name="tv_input">Source</string>
+    <string name="tv_vol_mais">Volume\n+</string>
+    <string name="tv_vol_menos">Volume\n-</string>
+    <string name="tv_ok">OK\n(Enter)</string>
+    <string name="tv_left">Próximo</string>
+    <string name="tv_ant">Anterior</string>
+    <string name="tv_anterior">Anterior</string>
+    <string name="tv_ca_mais">Canal\n+</string>
+    <string name="tv_ca_menos">Canal\n-</string>
+    <string name="sem_conexao">Aguarde\nConexão</string>
+    <string name="lr_chama">Chama</string>
+    <string name="lr_alta">Alta\n(2000w)</string>
+    <string name="lr_media">Media\n(1000w)</string>
+    <string name="lr_desc">Lareira Elétrica</string>
+    <string name="lr_bt_txt">Lareira\nSala</string>
 </resources>
