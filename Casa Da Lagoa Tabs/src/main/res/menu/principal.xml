@@ -30,6 +30,11 @@
         android:orderInCategory="92"
         android:title="@string/menu_Calendario"/>
 
+    <item android:id="@+id/menu_grafico"
+        android:showAsAction="never"
+        android:orderInCategory="93"
+        android:title="@string/menu_grafico"/>
+
     <item android:id="@+id/menu_toggle_log"
         android:showAsAction="never"
         android:orderInCategory="99"

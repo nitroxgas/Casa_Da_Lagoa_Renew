@@ -49,7 +49,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/lay_botao"
-        android:visibility="gone">
+        android:visibility="visible">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -486,7 +486,7 @@
         android:divider="#66FFFFFF"
         android:clickable="false"
         android:showDividers="beginning|middle|end"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -549,7 +549,7 @@
             android:id="@+id/webView"
             android:layout_weight="2"
             android:background="@color/c_vermelho"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:layout_gravity="center"
             android:clickable="true"
             android:textAlignment="gravity" />

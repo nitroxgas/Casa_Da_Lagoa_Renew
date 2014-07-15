@@ -14,6 +14,9 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -23,6 +26,7 @@ import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -90,6 +94,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     Timer timer;
     MyTimerTask myTimerTask;
     boolean showConfig = false;
+    boolean conectar = true;
 
     // Definições para agendamentos
     boolean verAgenda = false;
@@ -101,37 +106,46 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
 
     //final String[] estado = {"0","0","0","0","0","0","0","0","0","0","0"};
     public String servidor = "https://docs.google.com/spreadsheet/pub?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&single=true&gid=0&range=A1&output=csv";
+    public String servidorGrafico = "https://docs.google.com/spreadsheet/oimg?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&oid=1&zx=uz4jqb2kuxjw";
+    public String strPlanilha ="https://docs.google.com/spreadsheet/pub?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&single=true&gid=0&range=A1&output=csv";
+    public SharedPreferences mPrefs;
 
     public  HttpAsyncTask mHttpAsyncTask = new HttpAsyncTask();
 
     @Override
     protected void onResume(){
         super.onResume();
-        // Verifica se há conexão e faz solicitação inicial
-        if(isConnected()){
-            ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService( Context.CONNECTIVITY_SERVICE );
-            NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-            NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE );
+    }
 
-            if ( activeNetInfo != null )
-            {
+    private void Conectar() {
+        // Verifica se há conexão e faz solicitação inicial
+        if (isConnected()) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+            NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+            if (activeNetInfo != null) {
                 if (activeNetInfo.getTypeName().toString().contains("WIFI")) {
                     Toast.makeText(getBaseContext(), "WIFI SSID (" + getCurrentSsid(this) + ")", Toast.LENGTH_LONG).show();
                     if (getCurrentSsid(this).contains("GeorgeHome")) {
                         servidor = "http://192.168.1.220:80/";
+                        new HttpAsyncTask().execute(servidor);
                         Toast.makeText(getBaseContext(), "Acessando rede local...", Toast.LENGTH_LONG).show();
+                        conectar=false;
                     }
-                }  else {
-                    Toast.makeText( this, "Rede Móvel - Buscando IP " , Toast.LENGTH_SHORT ).show();
-                    new HttpAsyncTask().execute("https://docs.google.com/spreadsheet/pub?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&single=true&gid=0&range=A1&output=csv");
+                } else {
+                    servidor = mPrefs.getString("servidor", strPlanilha);
+                    showConfig = mPrefs.getBoolean("trace", false);
+                    Toast.makeText(this, "Rede Móvel", Toast.LENGTH_SHORT).show();
+                    HttpAsyncTask cHttpAsyncTask = new HttpAsyncTask(); //.execute(servidor);
+                    cHttpAsyncTask.execute(servidor);
+                    conectar=false;
                 }
             }
-        }
-        else{
+        } else {
             Toast.makeText(getBaseContext(), "Não Conectado!", Toast.LENGTH_LONG).show();
         }
     }
-
 
     public boolean isEventInCal(Context context, String cal_meeting_id) {
 
@@ -261,16 +275,13 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_principal);
-
-
+        mPrefs = getSharedPreferences("configuracao", 0);
 
         // Tratamento de calendário
 
         if (isEventInCal(this,"Lareira") == true) {
-            Toast.makeText( this, "Tem Evento" , Toast.LENGTH_SHORT ).show();
+            Toast.makeText( this, "Tem Evento", Toast.LENGTH_SHORT ).show();
         }
-
-
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -308,6 +319,8 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                             .setTabListener(this));
         }
 
+        //actionBar.setSelectedNavigationItem(2); if (conectar)
+        Conectar();
     }
 
     @Override
@@ -324,12 +337,24 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         // as you specify a parent activity in AndroidManifest.xml.
         ActionBar actionBar = getSupportActionBar();
         switch(item.getItemId()) {
-            case R.id.menu_toggle_log: showConfig=!showConfig; break;
+            case R.id.menu_toggle_log:
+                showConfig=!showConfig;
+                SharedPreferences.Editor mEditor = mPrefs.edit();
+                mEditor.putBoolean("trace", showConfig).commit();
+                break;
             case R.id.menu_agenda:
                 verAgenda=!verAgenda;
                 break;
+            case R.id.menu_grafico:
+                actionBar.setSelectedNavigationItem(2);
+                WebView tela = (WebView)  this.mViewPager.findViewById(1001);
+                if ((tela!=null)&&(tela.getVisibility()==View.INVISIBLE)){
+                    tela.setVisibility(View.VISIBLE);
+                    tela.loadUrl(servidorGrafico);
+                } else tela.setVisibility(View.INVISIBLE);
+                break;
             case R.id.menu_atualizar:
-                new HttpAsyncTask().execute(servidor);
+                new HttpAsyncTask().execute(strPlanilha);
                 if (timer==null) {
                     timer = new Timer();
                     myTimerTask = new MyTimerTask();
@@ -353,7 +378,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
-        if (!servidor.contains("https://docs"))  new HttpAsyncTask().execute(servidor);
+        if (!servidor.contains("https://docs")) new HttpAsyncTask().execute(servidor);
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
@@ -366,6 +391,9 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     }
 
 
+     /*
+         Timer para atualizar o conteúdo efetuando nova consulta.
+     */
     class MyTimerTask extends TimerTask {
 
         @Override
@@ -497,19 +525,11 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                     tempInt.setId(403);
 
                     WebView tela = (WebView) tempView.findViewById(R.id.webView);
+                    tela.setId(1001);
                     tela.getSettings().setJavaScriptEnabled(false);
                     tela.setEnabled(true);
                     //tela.setInitialScale(250);
-                   // tela.getSettings().setBuiltInZoomControls(true);
-                    tela.setWebChromeClient(new WebChromeClient() {
-                        public void onProgressChanged(WebView view, int progress) {
-                            // Activities and WebViews measure progress with different scales.
-                            // The progress meter will automatically disappear when we reach 100%
-                            //activity.setProgress(progress * 1000);
-                            tempInt.setText(progress);
-
-                        }
-                    });
+                    tela.getSettings().setBuiltInZoomControls(true);
 
                     tela.setWebChromeClient(new WebChromeClient() {
 
@@ -523,15 +543,15 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                             handler.proceed();
                         }
                     });
-
-
                     tela.clearSslPreferences();
-                    tela.loadUrl("https://docs.google.com/spreadsheet/oimg?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&oid=1&zx=uz4jqb2kuxjw");
+                    tela.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    // Não funcionou, precisou fixar o ID em 1001
+                    //tela.setVisibility(View.INVISIBLE);
                     //String fonteGrafico = "<img src=\"https://docs.google.com/spreadsheet/oimg?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&oid=1&zx=uz4jqb2kuxjw\" />";
                     //tela.loadDataWithBaseURL("https://docs.google.com/spreadsheet/",fonteGrafico,"text/html",null,null);
 
-
                     break; //  textView.setTag(getArguments().getInt(ARG_SECTION_NUMBER), tempObj);
+
                 case 2: // Exterior
                     botaoView.setVisibility(View.GONE);
                     chaveView.setVisibility(View.VISIBLE);
@@ -539,6 +559,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                     criaChave(rootView, arr_Exterior,2);
                     criaChave(rootView, arr_Interior,3);
                     break;
+
                 case 1: //Dispositivos
                     chaveView.setVisibility(View.GONE);
                     tempView.setVisibility(View.GONE);
@@ -646,7 +667,6 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     }
 
     public void implementaBotao(final Button bt, final String rele, final String mensagem, final int icone, final String[] estado, final boolean confirmar){
-
         bt.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View view) {
@@ -755,7 +775,10 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
 
                 servidor = "http://"+result.toString()+":8080/";
                 new HttpAsyncTask().execute(servidor);
-                Toast.makeText(getBaseContext(), "IP Identificado:(" + servidor.toString() + ")", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Novo IP Identificado:(" + servidor.toString() + ")", Toast.LENGTH_SHORT).show();
+                // Salva valor localmente...
+                SharedPreferences.Editor mEditor = mPrefs.edit();
+                mEditor.putString("servidor", servidor.toString()).commit();
             } else
             if (result.contains("</DADOS>")) {
                // result = result +":19:25";
@@ -831,7 +854,6 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                 if (botaoView!=null) {
                     ajustaBotoes(estado);
                     View lr_img_view = findViewById(R.id.lay_lr_img);
-
 
                     if (estado[21].contains("0")) {
                         lr_img_view.setBackgroundResource(R.drawable.bg_lareira_off);
@@ -909,13 +931,16 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                             ajustacor(tmpExt, estado[2]);
                         }
 
-                        final TextView tmpInt = (TextView) findViewById(403); //  mViewPager.getChildAt(0).getRootView().
+                        TextView tmpInt = (TextView) findViewById(403); //  mViewPager.getChildAt(0).getRootView().
                         if (tmpInt != null) {
                             tmpInt.setText("Casa\n" + estado[3] + "º C");
                             ajustacor(tmpInt,  estado[3]);
                         }
 
-
+                        WebView tela = (WebView) findViewById(1001);
+                        if ((tela!=null)&&(tela.getVisibility()==View.VISIBLE)){
+                            tela.loadUrl(servidorGrafico);
+                        }
                 }
 
                 /*
@@ -924,7 +949,10 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                 }
                  */
 
-            } else Toast.makeText(getBaseContext(), "Resultado Não Esperado: (" + result.toString() + ")", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getBaseContext(), "Resultado Não Esperado: (" + result.toString() + ") Buscando novo servidor...", Toast.LENGTH_LONG).show();
+                new HttpAsyncTask().execute(strPlanilha);
+            }
         }
     }
 }

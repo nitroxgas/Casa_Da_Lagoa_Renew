@@ -12,6 +12,7 @@
     <string name="app_menu">Configurar</string>
     <string name="menu_sair">Sair</string>
     <string name="menu_Calendario">Observar Agenda</string>
+    <string name="menu_grafico">Grafico Temperaturas</string>
     <string name="menu_external">Iluminação</string>
     <string name="menu_internal">Interior</string>
     <string name="menu_devices">Dispositivos</string>
