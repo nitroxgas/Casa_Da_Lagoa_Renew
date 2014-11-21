@@ -9,7 +9,7 @@
     <string name="action_settings">Configuração</string>
     <string name="dummy_button">Sair</string>
     <string name="dummy_content">Conteúdo</string>
-    <string name="app_menu">Configurar</string>
+    <string name="app_menu">Configurações</string>
     <string name="menu_sair">Sair</string>
     <string name="menu_Calendario">Observar Agenda</string>
     <string name="menu_grafico">Grafico Temperaturas</string>
@@ -47,4 +47,7 @@
     <string name="lr_media">Media\n(1000w)</string>
     <string name="lr_desc">Lareira Elétrica</string>
     <string name="lr_bt_txt">Lareira\nSala</string>
+    <string name="pref_dream_text_key">pref_dream_text</string>
+    <string name="pref_dream_text_default">zzzZZZzzz</string>
+
 </resources>

@@ -1,11 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="br.com.casadalagoa.casadalagoa.casadalagoatabs.Principal" >
-
+<!--
     <item android:id="@+id/menu_atualizar"
         android:showAsAction="always"
         android:icon="@android:drawable/stat_notify_sync"
         android:title="@string/menu_atualizar"/>
+
+        <item android:id="@+id/menu_grafico"
+        android:showAsAction="never"
+        android:orderInCategory="93"
+        android:title="@string/menu_grafico"/>
+
+
+    <item android:id="@+id/menu_agenda"
+        android:showAsAction="never"
+        android:orderInCategory="92"
+        android:title="@string/menu_Calendario"/>
+-->
 
     <item android:id="@+id/menu_devices"
         android:showAsAction="never"
@@ -25,15 +37,6 @@
         android:orderInCategory="90"
         android:title="@string/title_section4"/>
 
-    <item android:id="@+id/menu_agenda"
-        android:showAsAction="never"
-        android:orderInCategory="92"
-        android:title="@string/menu_Calendario"/>
-
-    <item android:id="@+id/menu_grafico"
-        android:showAsAction="never"
-        android:orderInCategory="93"
-        android:title="@string/menu_grafico"/>
 
     <item android:id="@+id/menu_toggle_log"
         android:showAsAction="never"
