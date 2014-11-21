@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Casa Da Lagoa Tabs/Casa Da Lagoa Tabs.iml" filepath="$PROJECT_DIR$/Casa Da Lagoa Tabs/Casa Da Lagoa Tabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/CasaDaLagoa.iml" filepath="$PROJECT_DIR$/CasaDaLagoa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/casawear/casawear.iml" filepath="$PROJECT_DIR$/casawear/casawear.iml" />
     </modules>
   </component>
 </project>

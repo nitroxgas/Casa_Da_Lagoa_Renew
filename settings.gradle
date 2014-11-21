@@ -1,1 +1,1 @@
-include ':Casa Da Lagoa Tabs'
+include ':Casa Da Lagoa Tabs', ':casawear'
