@@ -37,8 +37,8 @@
                 android:background="@color/black_overlay"
                 android:textStyle="bold|italic"
                 android:textSize="24sp"
-                android:textOn="Ligado"
-                android:textOff="Desligado"
+                android:textOn="@string/ligado"
+                android:textOff="@string/desligado"
                 android:textColor="#FFFFFF"
                 android:layout_weight="1" />
 
@@ -137,9 +137,9 @@
                     android:textIsSelectable="false"
                     android:textAlignment="gravity"
                     android:gravity="center"
-                    android:singleLine="false"
                     android:textStyle="bold"
-                    android:text="@string/sem_conexao" />
+                    android:text="@string/sem_conexao"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -505,42 +505,39 @@
                 android:id="@+id/tmpPlaca"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/black_overlay"
-                android:textColor="#ffffff"
-                android:textSize="24sp"
                 android:layout_weight="1"
-                android:textIsSelectable="false"
+                android:background="@color/black_overlay"
                 android:gravity="center"
-                android:singleLine="false"
-                android:textStyle="bold" />
+                android:maxLines="1"
+                android:textColor="#ffffff"
+                android:textIsSelectable="false"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/tmpInt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/black_overlay"
-                android:textColor="#ffffff"
-                android:textSize="24sp"
                 android:layout_weight="1"
-                android:textIsSelectable="false"
-                android:textAlignment="gravity"
+                android:background="@color/black_overlay"
                 android:gravity="center"
-                android:singleLine="false"
-                android:textStyle="bold"
-                android:text="@string/sem_conexao" />
+                android:maxLines="1"
+                android:text="@string/sem_conexao"
+                android:textAlignment="gravity"
+                android:textColor="#ffffff"
+                android:textIsSelectable="false"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/tmpExt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/black_overlay"
-                android:textColor="#ffffff"
-                android:textSize="24sp"
                 android:layout_weight="1"
-                android:textIsSelectable="false"
-                android:textAlignment="gravity"
+                android:background="@color/black_overlay"
                 android:gravity="center"
-                android:textStyle="bold" />
+                android:textAlignment="gravity"
+                android:textColor="#ffffff"
+                android:textIsSelectable="false"
+                android:textSize="24sp" />
 
         </LinearLayout>
 
