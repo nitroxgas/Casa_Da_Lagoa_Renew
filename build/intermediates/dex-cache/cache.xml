@@ -2,25 +2,139 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\ssu\Google Drive\Android\CasaDaLagoa\Casa Da Lagoa Tabs\build\intermediates\exploded-aar\com.android.support\gridlayout-v7\19.0.1\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="b1701c49371231e0423b7588539f24bdab485019">
-        <dex dex="C:\Users\ssu\Google Drive\Android\CasaDaLagoa\Casa Da Lagoa Tabs\build\intermediates\pre-dexed\debug\classes-b074196e79f8fa2e4b7e3a789463f9d1a7d7fe02.jar" />
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\dd628053726dae4a831e0994a70e8c060f6447aa\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a049bbe7689008bf49579f4fc854acc38fa08862\classes.dex" />
     </item>
     <item
-        jar="C:\Users\ssu\Google Drive\Android\CasaDaLagoa\Casa Da Lagoa Tabs\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.0.1\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="f71a6822470c9eb659d4f4a6cb57b780b35f058b">
-        <dex dex="C:\Users\ssu\Google Drive\Android\CasaDaLagoa\Casa Da Lagoa Tabs\build\intermediates\pre-dexed\debug\classes-2c5fdd11a616025101041712f1dd1693fc8eef97.jar" />
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\f92cf7ad3616cb29c7c3e3edd3e59bf226cecf5f\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3a1bac2cc31df44dbf1f9bbf2c675319503c9271">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_cfe92fe9e98c6ac8c619d0d8094c51e0e9b23f53\classes.dex" />
     </item>
     <item
-        jar="C:\Program Files (x86)\Android\android-studio_ant\sdk\extras\android\m2repository\com\android\support\support-v4\19.0.1\support-v4-19.0.1.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="587da9a481ffd341d2fa091704489b89845ddacd">
-        <dex dex="C:\Users\ssu\Google Drive\Android\CasaDaLagoa\Casa Da Lagoa Tabs\build\intermediates\pre-dexed\debug\support-v4-19.0.1-ae3a8144ee76e2b3ff84b3e861cf9c1e510cd140.jar" />
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\99e8a498c81b8455512fc2bf7862cbe1169ff136\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_e161aae7dba8e213268dc85ef70b2b8d8233e13a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.3.1_602ffe3a5875aa153b00bdcf5d8e0216da1d2335\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\4fe498a9244ba2d4ffeb4023ffbbc9def1708f82\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_09de65087e6a681669be2d745106e27b22890d7d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\1bba65dc5812fc6e5e9ece6d9f7ec27276aaf15c\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c6e3892d29dccac17a90dd72ddc0147328c5c7fc\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="acb486372a4054de12c7eaf7dfd03c01c1c57489">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_a2208dfb7d981df94a2719336525f19a2d92e11d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_55f0cd9cf648eb92070143d60cc409aa68dd3252\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\5f004cb9d80efc313eec27389a5379af982ca3b2\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_178bb80cb652264f9ef0cdff16db91aa1d369696\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="2399499681c468368b628ab4f44f13698ec77eac">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_a2208dfb7d981df94a2719336525f19a2d92e11d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\884f4591cbdaaf78ddc353c1ae3b72e5a9377246\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8e659daa487f63cf1dbb5c8125d028da47fc515c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\517fedcb60aead40006a311621e89269bd62288b\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_4ad6af29382cbe1aa51ba72f59d7775b645e5f2e\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_55f0cd9cf648eb92070143d60cc409aa68dd3252\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\0f698232fc590ba341f3fea4298d9fb976e16a25\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="4a26a1154d053ab11aaf4c3967c42a4d66390991">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a066100b63e22f5342fc5d73fb63d9f0d6e43233\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\nitro_000\.android\build-cache\944689551bc27331b16d4c848b231b36ba0ce8a1\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
+        <dex dex="C:\Users\nitro_000\AndroidStudioProjects\Casa_Da_Lagoa_Tabs\Casa Da Lagoa Tabs\build\intermediates\transforms\dex\debug\folders\1000\10\classes_614a0132678b23490bc34fb2429e031c7ee7e92b\classes.dex" />
     </item>
 
 </items>

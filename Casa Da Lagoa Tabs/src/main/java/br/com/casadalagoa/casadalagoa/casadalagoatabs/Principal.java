@@ -207,7 +207,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         implementaBotao(alimentador, "?relay=RACAO",  "Acionar o alimentador ?",R.drawable.ic_dog_g, estado, true);
 
         Button internet = (Button) findViewById(102);
-        implementaBotao(internet, "?relay=INTERNET", "Reiniciar a internet ?",R.drawable.abc_ic_go_search_api_holo_light, estado, true);
+        implementaBotao(internet, "?relay=INTERNET", "Reiniciar a internet ?",R.drawable.ic_remote, estado, true);
 
         Button tv = (Button) findViewById(R.id.bt_tvsala);
         implementaBotao(tv, "TV_SALA", "Ligar/Desligar TV ?",R.drawable.ic_remote, estado, false);
@@ -295,7 +295,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (networkInfo.isConnected()) {
-            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
             if (connectionInfo != null && !(connectionInfo.getSSID().equals(""))) {
                 //if (connectionInfo != null && !StringUtil.isBlank(connectionInfo.getSSID())) {
@@ -520,7 +520,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                 chave_nova.setBackgroundColor(getResources().getColor(R.color.black_overlay));
                 chave_nova.setTextAppearance(chave_nova.getContext(),R.style.ChaveTextAppearance);
                 chave_nova.setSwitchTextAppearance(chave_nova.getContext(),R.style.SwitchTextAppearance);
-                if (conteudo[i]=="Reservado") {
+                if (conteudo[i].equals("Reservado")) {
                     chave_nova.setActivated(false);
                     chave_nova.setEnabled(false);
                 }
@@ -529,7 +529,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
         }
 
         // Declara chaves já disponíveis
-        public final String[] arr_Interior = { "Quarto", "Closet", "Cabeceira G", "Cabeceira C", "Escritório", "Escada"  };
+        public final String[] arr_Interior = { "Quarto", "Closet", "Cabeceira G", "Cabeceira C", "Escritório", "Escada", "Balcão", "Mesas", "Superior"  };
         public final String[] arr_Exterior = { "Fundos", "Área de Serviço" };
 
         @Override
@@ -566,7 +566,7 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                     tela.setWebChromeClient(new WebChromeClient() {
 
                         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                            tempInt.setText("Oh no! " + description);
+                            tempInt.setText(String.format("Oh no! %s", description));
                         }
 
                         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError
@@ -582,7 +582,9 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
                     boolean showGrafico = mPrefs.getBoolean("showGrafico",false);
                     if (showGrafico) {
                         tela.setVisibility(View.VISIBLE);
-                        tela.loadUrl("https://docs.google.com/spreadsheet/oimg?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&oid=1&zx=uz4jqb2kuxjw");
+                        tela.loadUrl("https://docs.google.com/spreadsheets/d/e/2PACX-1vTKRkuEEvqvu9J_q4558nLrlBHakz7rhwYbFifu38doQ3FnDBNLvJndlO8oIPEcJA2oX8sfKcz5929n/pubchart?oid=1&format=image");
+                                    //https://docs.google.com/spreadsheets/d/e/2PACX-1vTKRkuEEvqvu9J_q4558nLrlBHakz7rhwYbFifu38doQ3FnDBNLvJndlO8oIPEcJA2oX8sfKcz5929n/pubchart?oid=1&amp;format=image");
+                                //"https://docs.google.com/spreadsheet/oimg?key=0AthpB0DCO-YadE5tcC1BVWRzSnNBRkRmLTJfaGhTOFE&oid=1&zx=uz4jqb2kuxjw");
                     } else tela.setVisibility(View.INVISIBLE);
                     // Não funcionou, precisou fixar o ID em 1001
                     //tela.setVisibility(View.INVISIBLE);
@@ -622,12 +624,12 @@ public class Principal extends ActionBarActivity implements ActionBar.TabListene
     // Sessão para tratar das comunicações:
     //
     public static String GET(String url){
-        InputStream inputStream = null;
-        String result = "";
+        InputStream inputStream ;
+        String result;
         try {
 
             // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
+            DefaultHttpClient httpclient = new DefaultHttpClient();
 
             // make GET request to the given URL
             HttpResponse httpResponse = httpclient.execute(new HttpGet(url));

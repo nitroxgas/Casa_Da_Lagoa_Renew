@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="support-v4-20.0.0">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/casawear/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/res" />
-      <root url="jar://$PROJECT_DIR$/casawear/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/casawear/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.android/build-cache/186d5c79145adb3511aae978c37f1a0ee6d9068a/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/186d5c79145adb3511aae978c37f1a0ee6d9068a/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/186d5c79145adb3511aae978c37f1a0ee6d9068a/output/jars/libs/internal_impl-20.0.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

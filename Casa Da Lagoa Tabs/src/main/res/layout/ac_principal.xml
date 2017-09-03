@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_lagoa"
-    android:paddingRight="1sp"
     android:paddingBottom="0dp"
-    tools:context="br.com.casadalagoa.casadalagoa.casadalagoatabs.Principal"
-    android:paddingLeft="1sp" />
+    android:paddingLeft="1sp"
+    android:paddingRight="1sp"
+    tools:context="br.com.casadalagoa.casadalagoa.casadalagoatabs.Principal" />

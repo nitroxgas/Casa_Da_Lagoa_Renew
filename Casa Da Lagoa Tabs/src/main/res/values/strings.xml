@@ -28,6 +28,9 @@
     <string name="acionar_alimentador">Alimentar\nCães</string>
     <string name="reiniciar_internet">Reiniciar\nInternet</string>
     <string name="reservado">Reservado</string>
+
+    <string name="ligado">Ligado</string>
+    <string name="desligado">Desligado</string>
     <string name="ligar_tudo">Ligar\nExternas</string>
     <string name="ligar_internas">Ligar\nInternas</string>
     <string name="tv_sala">TV\nSala</string>
